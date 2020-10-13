@@ -4,12 +4,13 @@
 <head>
   <title>BusMall Market Research Survey</title>
   <link href='css/reset.css' type='text/css' rel='stylesheet' />
-  <link href='css/reset.css' type='text/css' rel='stylesheet' />
+  <link href='css/style.css' type='text/css' rel='stylesheet' />
 </head>
 
 <body>
   <header>
-    <img src='' />
+    <img id='logo'
+      src='img/red-cartoon-bus-red-vector-cartoon-bus-isolated-on-white-background-eps-vector_csp44731189.jpg' />
     <h1>BusMall Market Research Survey</h1>
     <nav>
       <ul>
@@ -22,30 +23,54 @@
   </header>
   <main>
     <section id='resutlstracker'>
+      <div id='resultsheader'>
+        <h2>Resutls</h2>
+        <p>You will be able to view results below when the survey is complete.</p>
+      </div>
       <ul id='resultslist'>
-
       </ul>
     </section>
     <section id='productgallery'>
-      <h2>Pick 1 of the 3 products below:</h2>
       <form id='productselector'>
-        <fieldset>
-          <img id='firstproduct_img' />
-          <input id='firstproduct' type='radio' name='Select' value='p1' />
-          <label id='firstproduct_lbl' for='firstproduct'></label>
-          <img id='secondproduct_img' />
-          <input id='secondproduct' type='radio' name='Select' value='p2' />
-          <label id='secondproduct_lbl' for='secondproduct'></label>
-          <img id='thirdproduct_img' />
-          <input id='thirdproduct' type='radio' name='Select' value='p3' />
-          <label id='thirdproduct_lbl' for='thirdproduct'></label>
-          <input type='submit' name='vote' value='Vote!' />
+        <h2>Pick your favorite of the 3 products below:</h2>
+        <fieldset id='selectormenu'>
+          <div>
+            <img id='product1_img' />
+            <input id='product1' type='radio' name='select' value='0' />
+            <label id='product1_lbl' for='product1'></label>
+          </div>
+          <div>
+            <img id='product2_img' />
+            <input id='product2' type='radio' name='select' value='1' />
+            <label id='product2_lbl' for='product2'></label>
+          </div>
+          <div>
+            <img id='product3_img' />
+            <input id='product3' type='radio' name='select' value='2' />
+            <label id='product3_lbl' for='product3'></label>
+          </div>
+          <input id='votebutton' type='submit' value='Vote!' />
         </fieldset>
       </form>
+      <article id='text'>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+          magna aliqua. Id leo in vitae turpis massa sed. Mauris sit amet massa vitae tortor. Eget dolor morbi non arcu
+          risus quis. Massa vitae tortor condimentum lacinia quis. Lorem ipsum dolor sit amet consectetur adipiscing.
+          Eget
+          nullam non nisi est sit amet. Nunc consequat interdum varius sit amet mattis vulputate. Scelerisque mauris
+          pellentesque pulvinar pellentesque habitant morbi tristique senectus et. Eget mauris pharetra et ultrices
+          neque
+          ornare aenean euismod elementum. Quisque id diam vel quam elementum pulvinar etiam non. Ultricies mi quis
+          hendrerit dolor magna eget. Faucibus nisl tincidunt eget nullam non nisi est sit. Egestas quis ipsum
+          suspendisse
+          ultrices gravida dictum fusce ut. Senectus et netus et malesuada fames ac. Arcu vitae elementum curabitur
+          vitae
+          nunc sed velit dignissim. Nunc aliquet bibendum enim facilisis. Est pellentesque elit ullamcorper dignissim
+          cras
+          tincidunt lobortis. Nisi est sit amet facilisis.</p>
+      </article>
     </section>
-    <section id='text'>
-      <p></p>
-    </section>
+
   </main>
   <footer>
     <script src='js/app.js'></script>
