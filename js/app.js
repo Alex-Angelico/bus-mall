@@ -1,7 +1,11 @@
 'use strict';
 
-var productVote = document.getElementById('productselector');
 var productList = [];
+var productGallerySize = 3;
+var displayProducts = [];
+var surveyRounds = 25;
+var voteRounds = 0;
+var productVote = document.getElementById('productselector');
 
 new Product('R2-D2 Carry-On Bag', 'img/bag.jpg');
 new Product('Banana Slicer', 'img/banana.jpg');
@@ -27,34 +31,79 @@ new Product('Weird Wine Glass', 'img/wine-glass.jpg');
 function Product(name = '', file = '') {
   this.name = name;
   this.file = file;
-  this.voteCount = 0;
-  this.votePercentage = 0;
+  this.votes = 0;
+  this.appearances = 0;
   productList.push(this);
 }
 
-Product.prototype.galleryPresent = function () {
+function randomProduct() {
+  return Math.floor(Math.random() * (productList.length - 1));
+}
 
+function productRender() {
+  // var displayProducts = [];
+  for (var i = 1; i <= productGallerySize; i++) {
+    var selectProduct = randomProduct();
+    while (displayProducts.includes(selectProduct)) {
+      selectProduct = randomProduct();
+    }
+    displayProducts.push(selectProduct);
+    var productImage = document.getElementById(`product${i}_img`);
+    var productLabel = document.getElementById(`product${i}_lbl`);
+    productImage.src = productList[selectProduct].file;
+    productLabel.textContent = productList[selectProduct].name;
+  }
+}
+
+var addVote = function (event) {
+  event.preventDefault();
+  productList[displayProducts[event.target.select.value]].votes += 1;
+  productList[displayProducts[event.target.select.value]].appearances += 1;
+  voteRounds += 1;
+  if (voteRounds === surveyRounds) {
+    displayProducts = [];
+    var voteButtonAnchor = document.getElementById('selectormenu');
+    var voteButton = document.getElementById('votebutton');
+    voteButtonAnchor.removeChild(voteButton);
+    resultsButton();
+  } else {
+    displayProducts = [];
+    productRender();
+  }
 };
 
-console.log(productList);
+var resultsButton = function () {
+  var resultsHeader = document.getElementById('resultsheader');
+  var buttonContainer = document.createElement('form');
+  buttonContainer.setAttribute('id', 'resultscheck')
+  var buttonAnchor = document.createElement('fieldset');
+  var resultsButton = document.createElement('input');
+  resultsButton.setAttribute('id', 'resultsbutton');
+  resultsButton.setAttribute('type', 'submit');
+  resultsButton.setAttribute('value', 'View Results');
+  buttonAnchor.appendChild(resultsButton);
+  buttonContainer.appendChild(buttonAnchor);
+  resultsHeader.appendChild(buttonContainer);
+  resultsTrigger();
+};
 
-var firstProductImage = document.getElementById('firstproduct_img');
-firstProductImage.src = productList[3].file;
+var resultsTrigger = function () {
+  var checkResults = document.getElementById('resultscheck');
+  checkResults.addEventListener('submit', resultsTabulation);
+};
 
-var firstProductLabel = document.getElementById('firstproduct_lbl');
-firstProductLabel.textContent = productList[3].name;
+var resultsTabulation = function (event) {
+  event.preventDefault();
+  var resultsAnchor = document.getElementById('resultslist');
+  for (var i = 0; i < productList.length; i++) {
+    if (productList[i].appearances > 0) {
+      var resultsEntry = document.createElement('li');
+      resultsEntry.textContent = `${productList[i].name} had ${productList[i].votes} votes, and was seen ${productList[i].appearances} times.`;
+      resultsAnchor.appendChild(resultsEntry);
+    }
+  }
+};
 
-var secondProductImage = document.getElementById('secondproduct_img');
-secondProductImage.src = productList[6].file;
+productRender();
 
-var secondProductLabel = document.getElementById('secondproduct_lbl');
-secondProductLabel.textContent = productList[6].name;
-
-var thirdProductImage = document.getElementById('thirdproduct_img');
-thirdProductImage.src = productList[17].file;
-
-var thirdProductLabel = document.getElementById('thirdproduct_lbl');
-thirdProductLabel.textContent = productList[17].name;
-
-var i = 0;
-productVote.addEventListener('submit', console.log('confirm', i++));
+productVote.addEventListener('submit', addVote);
