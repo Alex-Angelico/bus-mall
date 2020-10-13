@@ -41,7 +41,6 @@ function randomProduct() {
 }
 
 function productRender() {
-  // var displayProducts = [];
   for (var i = 1; i <= productGallerySize; i++) {
     var selectProduct = randomProduct();
     while (displayProducts.includes(selectProduct)) {
