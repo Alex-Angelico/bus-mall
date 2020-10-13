@@ -51,13 +51,13 @@ function productRender() {
     var productLabel = document.getElementById(`product${i}_lbl`);
     productImage.src = productList[selectProduct].file;
     productLabel.textContent = productList[selectProduct].name;
+    productList[selectProduct].appearances += 1;
   }
 }
 
 var addVote = function (event) {
   event.preventDefault();
   productList[displayProducts[event.target.select.value]].votes += 1;
-  productList[displayProducts[event.target.select.value]].appearances += 1;
   voteRounds += 1;
   if (voteRounds === surveyRounds) {
     displayProducts = [];
