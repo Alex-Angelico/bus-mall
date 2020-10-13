@@ -41,7 +41,6 @@ function randomProduct() {
 }
 
 function productRender() {
-  // var displayProducts = [];
   for (var i = 1; i <= productGallerySize; i++) {
     var selectProduct = randomProduct();
     while (displayProducts.includes(selectProduct)) {
@@ -75,7 +74,7 @@ var addVote = function (event) {
 var resultsButton = function () {
   var resultsHeader = document.getElementById('resultsheader');
   var buttonContainer = document.createElement('form');
-  buttonContainer.setAttribute('id', 'resultscheck')
+  buttonContainer.setAttribute('id', 'resultscheck');
   var buttonAnchor = document.createElement('fieldset');
   var resultsButton = document.createElement('input');
   resultsButton.setAttribute('id', 'resultsbutton');
