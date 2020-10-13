@@ -1,11 +1,10 @@
 'use strict';
 
 var productList = [];
-var productGallerySize = 3;
 var displayProducts = [];
+var productGallerySize = 3;
 var surveyRounds = 25;
 var voteRounds = 0;
-var productVote = document.getElementById('productselector');
 
 new Product('R2-D2 Carry-On Bag', 'img/bag.jpg');
 new Product('Banana Slicer', 'img/banana.jpg');
@@ -47,23 +46,33 @@ function productRender() {
       selectProduct = randomProduct();
     }
     displayProducts.push(selectProduct);
-    var productImage = document.getElementById(`product${i}_img`);
-    var productLabel = document.getElementById(`product${i}_lbl`);
-    productImage.src = productList[selectProduct].file;
-    productLabel.textContent = productList[selectProduct].name;
-    productList[selectProduct].appearances += 1;
+    document.getElementById(`product${i}_img`).src = productList[selectProduct].file;
+    document.getElementById(`product${i}_lbl`).textContent = productList[selectProduct].name;
+    productList[selectProduct].appearances++;
   }
+}
+
+function resultsButton() {
+  var buttonContainer = document.createElement('form');
+  var buttonAnchor = document.createElement('fieldset');
+  var resultsButton = document.createElement('input');
+  buttonContainer.setAttribute('id', 'resultscheck');
+  resultsButton.setAttribute('id', 'resultsbutton');
+  resultsButton.setAttribute('type', 'submit');
+  resultsButton.setAttribute('value', 'View Results');
+  buttonAnchor.appendChild(resultsButton);
+  buttonContainer.appendChild(buttonAnchor);
+  document.getElementById('resultsheader').appendChild(buttonContainer);
+  document.getElementById('resultscheck').addEventListener('submit', resultsTabulation);
 }
 
 var addVote = function (event) {
   event.preventDefault();
-  productList[displayProducts[event.target.select.value]].votes += 1;
-  voteRounds += 1;
+  productList[displayProducts[event.target.select.value - 1]].votes++;
+  voteRounds++;
   if (voteRounds === surveyRounds) {
     displayProducts = [];
-    var voteButtonAnchor = document.getElementById('selectormenu');
-    var voteButton = document.getElementById('votebutton');
-    voteButtonAnchor.removeChild(voteButton);
+    document.getElementById('selectormenu').removeChild(document.getElementById('votebutton'));
     resultsButton();
   } else {
     displayProducts = [];
@@ -71,38 +80,17 @@ var addVote = function (event) {
   }
 };
 
-var resultsButton = function () {
-  var resultsHeader = document.getElementById('resultsheader');
-  var buttonContainer = document.createElement('form');
-  buttonContainer.setAttribute('id', 'resultscheck');
-  var buttonAnchor = document.createElement('fieldset');
-  var resultsButton = document.createElement('input');
-  resultsButton.setAttribute('id', 'resultsbutton');
-  resultsButton.setAttribute('type', 'submit');
-  resultsButton.setAttribute('value', 'View Results');
-  buttonAnchor.appendChild(resultsButton);
-  buttonContainer.appendChild(buttonAnchor);
-  resultsHeader.appendChild(buttonContainer);
-  resultsTrigger();
-};
-
-var resultsTrigger = function () {
-  var checkResults = document.getElementById('resultscheck');
-  checkResults.addEventListener('submit', resultsTabulation);
-};
-
 var resultsTabulation = function (event) {
   event.preventDefault();
-  var resultsAnchor = document.getElementById('resultslist');
   for (var i = 0; i < productList.length; i++) {
     if (productList[i].appearances > 0) {
       var resultsEntry = document.createElement('li');
       resultsEntry.textContent = `${productList[i].name} had ${productList[i].votes} votes, and was seen ${productList[i].appearances} times.`;
-      resultsAnchor.appendChild(resultsEntry);
+      document.getElementById('resultslist').appendChild(resultsEntry);
     }
   }
 };
 
 productRender();
 
-productVote.addEventListener('submit', addVote);
+document.getElementById('productselector').addEventListener('submit', addVote);
