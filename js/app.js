@@ -1,7 +1,6 @@
 'use strict';
 
 var productList = [];
-// var displayProducts = [];
 var memoryProducts = [];
 var productGallerySize = 3;
 var surveyRounds = 25;
@@ -11,7 +10,7 @@ function Product(name = '', file = '') {
   this.name = name;
   this.file = file;
   this.votes = 0;
-  this.appearances = 0;
+  this.views = 0;
   productList.push(this);
 }
 
@@ -42,16 +41,11 @@ function productRender() {
     var selectProduct = randomProduct();
     while (checkProducts.includes(selectProduct) || memoryProducts.includes(selectProduct)) {
       selectProduct = randomProduct();
-      if (checkProducts.includes(selectProduct)) {
-        console.log('checkProducts duplicate detected:', selectProduct + ' random value');
-      } else if (memoryProducts.includes(selectProduct)) {
-        console.log('memoryProducts duplicate detected:', selectProduct + ' random value');
-      }
     }
     checkProducts.push(selectProduct);
     document.getElementById(`product${i}_img`).src = productList[selectProduct].file;
     document.getElementById(`product${i}_lbl`).textContent = productList[selectProduct].name;
-    productList[selectProduct].appearances++;
+    productList[selectProduct].views++;
   }
   for (var j = 0; j < productGallerySize; j++) {
     memoryProducts.push(checkProducts[j]);
@@ -96,14 +90,223 @@ var resultsTabulation = function (event) {
   document.getElementById('resultstrigger').removeChild(document.getElementById('resultsbutton'));
   event.preventDefault();
   for (var i = 0; i < productList.length; i++) {
-    if (productList[i].appearances > 0) {
+    if (productList[i].views > 0) {
       var resultsEntry = document.createElement('li');
-      resultsEntry.textContent = `${productList[i].name} had ${productList[i].votes} votes, and was seen ${productList[i].appearances} times.`;
+      resultsEntry.textContent = `${productList[i].name} had ${productList[i].votes} votes, and was seen ${productList[i].views} times.`;
       document.getElementById('resultslist').appendChild(resultsEntry);
     }
   }
+  // resultsChartBuilder();
 };
+
+function resultsChartBuilder() {
+  // document.createElement('canvas');
+  // document.getElementById('main').appendChild(ctx);
+  var ctx = document.getElementById('canvas').getContext('2d');
+  // var elementTest = document.createElement('canvas');
+  // var ctx = document.createElement('canvas').getContext('2d');
+  var resultsChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      datasets: [{
+        label: 'Votes',
+        data: []
+      }, {
+        label: 'Views',
+        data: [],
+      }],
+      labels: []
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  });
+  console.log(ctx);
+  // document.getElementById('main').appendChild(ctx);
+  resultsChartFiller(resultsChart);
+}
+
+function resultsChartFiller(chart) {
+  for (var i = 0; i < productList.length; i++) {
+    if (productList[i].views > 0) {
+      chart.data.labels.push(productList[i].name);
+      chart.data.datasets.forEach((dataset) => {
+        if (chart.data.datasets.label === 'Votes') {
+          dataset.data.push(productList[i].votes);
+        } else if (chart.data.datasets.label === 'Views') {
+          dataset.data.push(productList[i].views);
+        }
+      });
+      chart.update();
+    }
+  }
+}
 
 productRender();
 
 document.getElementById('productselector').addEventListener('submit', addVote);
+
+
+// function resultsChartBuilder {
+//   // document.createElement('canvas');
+//   // document.getElementById('main').appendChild(ctx);
+//   // var ctx = document.getElementById('resultschart').getContext('2d');
+//   var ctx = document.createElement('canvas').getContext('2d');
+//   var resultsChart = new Chart(ctx, {
+//     type: 'bar',
+//     data: {
+//       datasets: [{
+//         label: 'Votes',
+//         data: []
+//       }, {
+//         label: 'Views',
+//         data: [],
+//       }],
+//       labels: []
+//     },
+//     options: {
+//       scales: {
+//         yAxes: [{
+//           ticks: {
+//             beginAtZero: true
+//           }
+//         }]
+//       }
+//     }
+//   });
+//   document.getElementById('main').appendChild(ctx);
+//   resultsChartFiller(ctx);
+// }
+
+// function resultsChartFiller(chart) {
+//   for (var i = 0; i < productList.length; i++) {
+//     if (productList[i].views > 0) {
+//       chart.data.labels.push(productList[i].name);
+//       chart.data.datasets.forEach((dataset) => {
+//         if (chart.data.datasets.label === 'Votes') {
+//           dataset.data.push(productList[i].votes);
+//         } else if (chart.data.datasets.label === 'Views') {
+//           dataset.data.push(productList[i].views);
+//         }
+//       });
+//       chart.update();
+//     }
+//   }
+// }
+
+// var ctx = document.getElementById('resultschart').getContext('2d');
+// var resultsChart = new Chart(ctx, {
+//   type: 'bar',
+//   data: {
+//     datasets: [{
+//       label: 'Votes',
+//       data: [10]
+//     }, {
+//       label: 'Views',
+//       data: [50],
+//     }],
+//     labels: []
+//   },
+//   options: {
+//     scales: {
+//       yAxes: [{
+//         ticks: {
+//           beginAtZero: true
+//         }
+//       }]
+//     }
+//   }
+// });
+
+// resultsChartFiller(resultsChart);
+
+
+// TEST FRAMEWORK ===========================================================
+
+var testLabelsArray = ['a', 'b', 'c', 'd', 'e', 'f'];
+var testVotesArray = [12, 7, 3, 5, 2, 3];
+var testViewsArray = [18, 19, 22, 30, 6, 13];
+
+function resultsChartFiller(chart) {
+  for (var i = 0; i < productList.length; i++) {
+    if (productList[i].views > 0) {
+      chart.data.labels.push(productList[i].name);
+      chart.data.datasets.forEach((dataset) => {
+        if (chart.data.datasets.label === 'Votes') {
+          dataset.data.push(productList[i].votes);
+        } else if (chart.data.datasets.label === 'Views') {
+          dataset.data.push(productList[i].views);
+        }
+      });
+      chart.update();
+    }
+  }
+}
+
+// chart.data.datasets.forEach((dataset) => {
+//   if (chart.data.datasets.label === 'Votes') {
+//     dataset.data.push(array2[i].votes);
+//   } else if (chart.data.datasets.label === 'Views') {
+//     dataset.data.push(array3[i].views);
+//   }
+// });
+
+// for (var i = 0; i < data.length; i++) {
+//   dataset.data.push(data[i]);
+// }
+
+function addChartLabels(chart, array1, array2) {
+  for (var i = 0; i < array1.length; i++) {
+    chart.data.labels.push(array1[i]);
+    chart.data.datasets.forEach((dataset) => {
+      dataset.data.push(array2[i].votes);
+    });
+  }
+  console.log(chart.data.datasets.label.data);
+  chart.update();
+}
+
+
+function addData(chart, label, data) {
+  chart.data.labels.push(label);
+  chart.data.datasets.forEach((dataset) => {
+    dataset.data.push(data);
+  });
+  chart.update();
+}
+
+var testData = [15, 18];
+
+// var ctx = document.getElementById('resultschart').getContext('2d');
+// var resultsChart = new Chart(ctx, {
+//   type: 'bar',
+//   data: {
+//     datasets: [{
+//       label: 'Votes',
+//       data: []
+//     }, {
+//       label: 'Views',
+//       data: testVotesArray
+//     }],
+//     labels: []
+//   },
+//   options: {
+//     scales: {
+//       yAxes: [{
+//         ticks: {
+//           beginAtZero: true
+//         }
+//       }]
+//     }
+//   }
+// });
+
+// addData(resultsChart, 'Votes', testViewsArray);
+
+// addChartLabels(resultsChart, testLabelsArray, testVotesArray, testViewsArray);

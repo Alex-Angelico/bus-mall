@@ -32,8 +32,14 @@ nav li {
   border-radius: 10px 10px 0px 0px;
 }
 
-main {
+/* main {
   display: flex;
+} */
+
+#top {
+  border: 5px dotted blue;
+  /* display: inline-block; */
+  display: inline-flex;
 }
 
 section {
@@ -55,21 +61,22 @@ p {
   display: inline-block;
 }
 
-#resultsbutton {
-  display: block;
-  object-position: center;
-  margin: 10px auto 10px auto;
-}
-
 #resultslist {
   max-width: 250px;
   margin-left: 20px;
   list-style: circle;
 }
 
+#resultsbutton {
+  display: block;
+  object-position: center;
+  margin: 10px auto 10px auto;
+}
+
 #productgallery {
   display: inline-block;
   max-width: 700px;
+  /* width: 700px; */
 }
 
 #productselector {
@@ -104,12 +111,12 @@ product1_lbl, product2_lbl, product3_lbl {
 }
 
 canvas {
-  width: 500px;
-  height: 500px;
+  margin: 20px auto;
+  max-width: 90%;
   border: 1px solid black;
-  display: block;
 }
 
 footer {
+  border-top: 1px solid black;
   height: 100px;
 }
