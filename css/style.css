@@ -103,6 +103,13 @@ product1_lbl, product2_lbl, product3_lbl {
   border: 3px solid greenyellow;
 }
 
+canvas {
+  width: 500px;
+  height: 500px;
+  border: 1px solid black;
+  display: block;
+}
+
 footer {
   height: 100px;
 }
