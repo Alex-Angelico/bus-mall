@@ -3,8 +3,12 @@
 var productList = [];
 var memoryProducts = [];
 var productGallerySize = 3;
+var productSelectorTitle = document.getElementById('selectortitle');
 var surveyRounds = 25;
 var voteRounds = 0;
+var names = [];
+var votes = [];
+var views = [];
 
 function Product(name = '', file = '') {
   this.name = name;
@@ -16,7 +20,7 @@ function Product(name = '', file = '') {
 
 new Product('R2-D2 Carry-On Bag', 'img/bag.jpg');
 new Product('Banana Slicer', 'img/banana.jpg');
-new Product('Bathroom Floor Stand', 'img/bathroom.jpg');
+new Product('Bathroom Entertainment System', 'img/bathroom.jpg');
 new Product('Open-Toed Rainboots', 'img/boots.jpg');
 new Product('All-In-One Breakfast Machine', 'img/breakfast.jpg');
 new Product('Meatball Bubble Gum', 'img/bubblegum.jpg');
@@ -43,6 +47,7 @@ function productRender() {
       selectProduct = randomProduct();
     }
     checkProducts.push(selectProduct);
+    galleryElementCreator(i);
     document.getElementById(`product${i}_img`).src = productList[selectProduct].file;
     document.getElementById(`product${i}_lbl`).textContent = productList[selectProduct].name;
     productList[selectProduct].views++;
@@ -59,19 +64,41 @@ function randomProduct() {
   return Math.floor(Math.random() * (productList.length - 1));
 }
 
+function galleryElementCreator(x) {
+  var galleryElementAnchor = document.createElement('div');
+  var galleryElementImage = document.createElement('img');
+  var galleryElementSelect = document.createElement('input');
+  var galleryElementLabel = document.createElement('label');
+  galleryElementImage.setAttribute('id', `product${x}_img`);
+  galleryElementSelect.setAttribute('id', `product${x}`);
+  galleryElementSelect.setAttribute('type', 'radio');
+  galleryElementSelect.setAttribute('name', 'select');
+  galleryElementSelect.setAttribute('value', `${x}`);
+  galleryElementLabel.setAttribute('id', `product${x}_lbl`);
+  galleryElementLabel.setAttribute('for', `product${x}`);
+  galleryElementAnchor.appendChild(galleryElementImage);
+  galleryElementAnchor.appendChild(galleryElementSelect);
+  galleryElementAnchor.appendChild(galleryElementLabel);
+  document.getElementById('galleryanchor').appendChild(galleryElementAnchor);
+}
+
 var addVote = function (event) {
   event.preventDefault();
   productList[memoryProducts[event.target.select.value - 1]].votes++;
   voteRounds++;
   if (voteRounds >= surveyRounds) {
     document.getElementById('selectormenu').removeChild(document.getElementById('votebutton'));
-    resultsButton();
+    resultsButtonCreator();
   } else {
+    var gallery = document.getElementById('galleryanchor');
+    while (gallery.firstChild) {
+      gallery.removeChild(gallery.firstChild);
+    }
     productRender();
   }
 };
 
-function resultsButton() {
+function resultsButtonCreator() {
   var buttonContainer = document.createElement('form');
   var buttonAnchor = document.createElement('fieldset');
   var resultsButton = document.createElement('input');
@@ -90,32 +117,48 @@ var resultsTabulation = function (event) {
   document.getElementById('resultstrigger').removeChild(document.getElementById('resultsbutton'));
   event.preventDefault();
   for (var i = 0; i < productList.length; i++) {
-    if (productList[i].views > 0) {
+    if (productList[i].views) {
       var resultsEntry = document.createElement('li');
-      resultsEntry.textContent = `${productList[i].name} had ${productList[i].votes} votes, and was seen ${productList[i].views} times.`;
+      resultsEntry.textContent = `${productList[i].name} had ${productList[i].votes} votes, and was viewed ${productList[i].views} times.`;
       document.getElementById('resultslist').appendChild(resultsEntry);
     }
   }
-  // resultsChartBuilder();
+  resultsChartFiller();
+  resultsChartBuilder();
 };
 
+function resultsChartFiller() {
+  for (var i = 0; i < productList.length; i++) {
+    if (productList[i].views) {
+      names.push(productList[i].name);
+      votes.push(productList[i].votes);
+      views.push(productList[i].views);
+    }
+  }
+}
+
 function resultsChartBuilder() {
-  // document.createElement('canvas');
-  // document.getElementById('main').appendChild(ctx);
-  var ctx = document.getElementById('canvas').getContext('2d');
-  // var elementTest = document.createElement('canvas');
-  // var ctx = document.createElement('canvas').getContext('2d');
-  var resultsChart = new Chart(ctx, {
+  var chartAnchor = document.createElement('canvas');
+  chartAnchor.setAttribute('id', 'resultschart');
+  document.getElementById('survey').appendChild(chartAnchor);
+  var ctx = document.getElementById('resultschart').getContext('2d');
+  new Chart(ctx, {
     type: 'bar',
     data: {
       datasets: [{
         label: 'Votes',
-        data: []
+        data: votes,
+        backgroundColor: '#FF0000',
+        borderColor: '#FF0000',
+        borderWidth: 1
       }, {
         label: 'Views',
-        data: [],
+        data: views,
+        backgroundColor: '#0000FF',
+        borderColor: '#0000FF',
+        borderWidth: 1
       }],
-      labels: []
+      labels: names
     },
     options: {
       scales: {
@@ -127,186 +170,9 @@ function resultsChartBuilder() {
       }
     }
   });
-  console.log(ctx);
-  // document.getElementById('main').appendChild(ctx);
-  resultsChartFiller(resultsChart);
 }
 
-function resultsChartFiller(chart) {
-  for (var i = 0; i < productList.length; i++) {
-    if (productList[i].views > 0) {
-      chart.data.labels.push(productList[i].name);
-      chart.data.datasets.forEach((dataset) => {
-        if (chart.data.datasets.label === 'Votes') {
-          dataset.data.push(productList[i].votes);
-        } else if (chart.data.datasets.label === 'Views') {
-          dataset.data.push(productList[i].views);
-        }
-      });
-      chart.update();
-    }
-  }
-}
-
-productRender();
-
+productSelectorTitle.textContent = `Vote for your favorite of the ${productGallerySize} products below:`;
 document.getElementById('productselector').addEventListener('submit', addVote);
 
-
-// function resultsChartBuilder {
-//   // document.createElement('canvas');
-//   // document.getElementById('main').appendChild(ctx);
-//   // var ctx = document.getElementById('resultschart').getContext('2d');
-//   var ctx = document.createElement('canvas').getContext('2d');
-//   var resultsChart = new Chart(ctx, {
-//     type: 'bar',
-//     data: {
-//       datasets: [{
-//         label: 'Votes',
-//         data: []
-//       }, {
-//         label: 'Views',
-//         data: [],
-//       }],
-//       labels: []
-//     },
-//     options: {
-//       scales: {
-//         yAxes: [{
-//           ticks: {
-//             beginAtZero: true
-//           }
-//         }]
-//       }
-//     }
-//   });
-//   document.getElementById('main').appendChild(ctx);
-//   resultsChartFiller(ctx);
-// }
-
-// function resultsChartFiller(chart) {
-//   for (var i = 0; i < productList.length; i++) {
-//     if (productList[i].views > 0) {
-//       chart.data.labels.push(productList[i].name);
-//       chart.data.datasets.forEach((dataset) => {
-//         if (chart.data.datasets.label === 'Votes') {
-//           dataset.data.push(productList[i].votes);
-//         } else if (chart.data.datasets.label === 'Views') {
-//           dataset.data.push(productList[i].views);
-//         }
-//       });
-//       chart.update();
-//     }
-//   }
-// }
-
-// var ctx = document.getElementById('resultschart').getContext('2d');
-// var resultsChart = new Chart(ctx, {
-//   type: 'bar',
-//   data: {
-//     datasets: [{
-//       label: 'Votes',
-//       data: [10]
-//     }, {
-//       label: 'Views',
-//       data: [50],
-//     }],
-//     labels: []
-//   },
-//   options: {
-//     scales: {
-//       yAxes: [{
-//         ticks: {
-//           beginAtZero: true
-//         }
-//       }]
-//     }
-//   }
-// });
-
-// resultsChartFiller(resultsChart);
-
-
-// TEST FRAMEWORK ===========================================================
-
-var testLabelsArray = ['a', 'b', 'c', 'd', 'e', 'f'];
-var testVotesArray = [12, 7, 3, 5, 2, 3];
-var testViewsArray = [18, 19, 22, 30, 6, 13];
-
-function resultsChartFiller(chart) {
-  for (var i = 0; i < productList.length; i++) {
-    if (productList[i].views > 0) {
-      chart.data.labels.push(productList[i].name);
-      chart.data.datasets.forEach((dataset) => {
-        if (chart.data.datasets.label === 'Votes') {
-          dataset.data.push(productList[i].votes);
-        } else if (chart.data.datasets.label === 'Views') {
-          dataset.data.push(productList[i].views);
-        }
-      });
-      chart.update();
-    }
-  }
-}
-
-// chart.data.datasets.forEach((dataset) => {
-//   if (chart.data.datasets.label === 'Votes') {
-//     dataset.data.push(array2[i].votes);
-//   } else if (chart.data.datasets.label === 'Views') {
-//     dataset.data.push(array3[i].views);
-//   }
-// });
-
-// for (var i = 0; i < data.length; i++) {
-//   dataset.data.push(data[i]);
-// }
-
-function addChartLabels(chart, array1, array2) {
-  for (var i = 0; i < array1.length; i++) {
-    chart.data.labels.push(array1[i]);
-    chart.data.datasets.forEach((dataset) => {
-      dataset.data.push(array2[i].votes);
-    });
-  }
-  console.log(chart.data.datasets.label.data);
-  chart.update();
-}
-
-
-function addData(chart, label, data) {
-  chart.data.labels.push(label);
-  chart.data.datasets.forEach((dataset) => {
-    dataset.data.push(data);
-  });
-  chart.update();
-}
-
-var testData = [15, 18];
-
-// var ctx = document.getElementById('resultschart').getContext('2d');
-// var resultsChart = new Chart(ctx, {
-//   type: 'bar',
-//   data: {
-//     datasets: [{
-//       label: 'Votes',
-//       data: []
-//     }, {
-//       label: 'Views',
-//       data: testVotesArray
-//     }],
-//     labels: []
-//   },
-//   options: {
-//     scales: {
-//       yAxes: [{
-//         ticks: {
-//           beginAtZero: true
-//         }
-//       }]
-//     }
-//   }
-// });
-
-// addData(resultsChart, 'Votes', testViewsArray);
-
-// addChartLabels(resultsChart, testLabelsArray, testVotesArray, testViewsArray);
+productRender();
