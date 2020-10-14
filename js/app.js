@@ -2,9 +2,9 @@
 
 var productList = [];
 var memoryProducts = [];
-var productGallerySize = 3;
+var productGallerySize = 4;
 var productSelectorTitle = document.getElementById('selectortitle');
-var surveyRounds = 25;
+var surveyRounds = 5;
 var voteRounds = 0;
 var names = [];
 var votes = [];
@@ -38,6 +38,18 @@ new Product('Canned Unicorn Meat', 'img/unicorn.jpg');
 new Product('Tentacle USB Dongle', 'img/usb.gif');
 new Product('Self-Watering Can', 'img/water-can.jpg');
 new Product('Weird Wine Glass', 'img/wine-glass.jpg');
+
+function dataRetrieval() {
+  if (localStorage.getItem('storedProductList')) {
+    var storedProductData = localStorage.getItem('storedProductList');
+    // console.log('stored', storedProductData);
+    var parsedProductData = JSON.parse(storedProductData);
+    productList = parsedProductData;
+    console.log('converted', productList);
+  } else {
+    alert('No stored data. Loading new survey.');
+  }
+}
 
 function productRender() {
   var checkProducts = [];
@@ -88,6 +100,7 @@ var addVote = function (event) {
   voteRounds++;
   if (voteRounds >= surveyRounds) {
     document.getElementById('selectormenu').removeChild(document.getElementById('votebutton'));
+    dataStorage();
     resultsButtonCreator();
   } else {
     var gallery = document.getElementById('galleryanchor');
@@ -172,7 +185,13 @@ function resultsChartBuilder() {
   });
 }
 
+function dataStorage() {
+  var convertedProductData = JSON.stringify(productList);
+  localStorage.setItem('storedProductList', convertedProductData);
+}
+
 productSelectorTitle.textContent = `Vote for your favorite of the ${productGallerySize} products below:`;
 document.getElementById('productselector').addEventListener('submit', addVote);
 
+dataRetrieval();
 productRender();
