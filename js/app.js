@@ -2,13 +2,13 @@
 
 var productList = [];
 var memoryProducts = [];
-var productGallerySize = 4;
-var productSelectorTitle = document.getElementById('selectortitle');
-var surveyRounds = 5;
+var productGallerySize = 3;
+var surveyRounds = 25;
 var voteRounds = 0;
 var names = [];
 var votes = [];
 var views = [];
+var productSelectorTitle = document.getElementById('selectortitle');
 
 function Product(name = '', file = '') {
   this.name = name;
@@ -42,12 +42,10 @@ new Product('Weird Wine Glass', 'img/wine-glass.jpg');
 function dataRetrieval() {
   if (localStorage.getItem('storedProductList')) {
     var storedProductData = localStorage.getItem('storedProductList');
-    // console.log('stored', storedProductData);
     var parsedProductData = JSON.parse(storedProductData);
     productList = parsedProductData;
-    console.log('converted', productList);
   } else {
-    alert('No stored data. Loading new survey.');
+    alert('No data in storage. Initializing new survey.');
   }
 }
 
