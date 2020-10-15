@@ -21,7 +21,7 @@
       </ul>
     </nav>
   </header>
-  <main>
+  <main id='survey'>
     <div id='top'>
       <section id='resutlstracker'>
         <div id='resultsheader'>
@@ -33,22 +33,9 @@
       </section>
       <section id='productgallery'>
         <form id='productselector'>
-          <h2>Vote for your favorite of the 3 products below:</h2>
+          <h2 id='selectortitle'></h2>
           <fieldset id='selectormenu'>
-            <div>
-              <img id='product1_img' />
-              <input id='product1' type='radio' name='select' value='1' />
-              <label id='product1_lbl' for='product1'></label>
-            </div>
-            <div>
-              <img id='product2_img' />
-              <input id='product2' type='radio' name='select' value='2' />
-              <label id='product2_lbl' for='product2'></label>
-            </div>
-            <div>
-              <img id='product3_img' />
-              <input id='product3' type='radio' name='select' value='3' />
-              <label id='product3_lbl' for='product3'></label>
+            <div id='galleryanchor'>
             </div>
             <input id='votebutton' type='submit' value='Vote!' />
           </fieldset>
@@ -74,8 +61,6 @@
         </article>
       </section>
     </div>
-    <!-- <canvas id="resultschart" width="400" height="400"></canvas> -->
-    <!-- <canvas></canvas> -->
   </main>
   <footer>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
