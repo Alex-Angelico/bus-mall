@@ -2,8 +2,8 @@
 
 var productList = [];
 var memoryProducts = [];
-var productGallerySize = 3;
-var surveyRounds = 25;
+var productGallerySize = 3; // determines the number of products presented to users in each round of the survey
+var surveyRounds = 25; // determines how many rounds of voting the survey runs for
 var voteRounds = 0;
 var names = [];
 var votes = [];
@@ -18,34 +18,39 @@ function Product(name = '', file = '') {
   productList.push(this);
 }
 
-new Product('R2-D2 Carry-On Bag', 'img/bag.jpg');
-new Product('Banana Slicer', 'img/banana.jpg');
-new Product('Bathroom Entertainment System', 'img/bathroom.jpg');
-new Product('Open-Toed Rainboots', 'img/boots.jpg');
-new Product('All-In-One Breakfast Machine', 'img/breakfast.jpg');
-new Product('Meatball Bubble Gum', 'img/bubblegum.jpg');
-new Product('Curious Chair', 'img/chair.jpg');
-new Product('Cthulhu Action Figure', 'img/cthulhu.jpg');
-new Product('Duckbill Dog Muzzle', 'img/dog-duck.jpg');
-new Product('Canned Dragon Meat', 'img/dragon.jpg');
-new Product('Pentensils', 'img/pen.jpg');
-new Product('Pet Sweeper Booties', 'img/pet-sweep.jpg');
-new Product('Pizza Scissors', 'img/scissors.jpg');
-new Product('Shark Sleeping Bag', 'img/shark.jpg');
-new Product('Baby Sweeper Onesie', 'img/sweep.png');
-new Product('Tauntaun Sleeping Bag', 'img/tauntaun.jpg');
-new Product('Canned Unicorn Meat', 'img/unicorn.jpg');
-new Product('Tentacle USB Dongle', 'img/usb.gif');
-new Product('Self-Watering Can', 'img/water-can.jpg');
-new Product('Weird Wine Glass', 'img/wine-glass.jpg');
+function initializeProducts() {
+  new Product('R2-D2 Carry-On Bag', 'img/bag.jpg');
+  new Product('Banana Slicer', 'img/banana.jpg');
+  new Product('Bathroom Entertainment System', 'img/bathroom.jpg');
+  new Product('Open-Toed Rainboots', 'img/boots.jpg');
+  new Product('All-In-One Breakfast Machine', 'img/breakfast.jpg');
+  new Product('Meatball Bubble Gum', 'img/bubblegum.jpg');
+  new Product('Curious Chair', 'img/chair.jpg');
+  new Product('Cthulhu Action Figure', 'img/cthulhu.jpg');
+  new Product('Duckbill Dog Muzzle', 'img/dog-duck.jpg');
+  new Product('Canned Dragon Meat', 'img/dragon.jpg');
+  new Product('Pentensils', 'img/pen.jpg');
+  new Product('Pet Sweeper Booties', 'img/pet-sweep.jpg');
+  new Product('Pizza Scissors', 'img/scissors.jpg');
+  new Product('Shark Sleeping Bag', 'img/shark.jpg');
+  new Product('Baby Sweeper Onesie', 'img/sweep.png');
+  new Product('Tauntaun Sleeping Bag', 'img/tauntaun.jpg');
+  new Product('Canned Unicorn Meat', 'img/unicorn.jpg');
+  new Product('Tentacle USB Dongle', 'img/usb.gif');
+  new Product('Self-Watering Can', 'img/water-can.jpg');
+  new Product('Weird Wine Glass', 'img/wine-glass.jpg');
+}
 
 function dataRetrieval() {
   if (localStorage.getItem('storedProductList')) {
     var storedProductData = localStorage.getItem('storedProductList');
     var parsedProductData = JSON.parse(storedProductData);
     productList = parsedProductData;
+    productRender();
   } else {
     alert('No data in storage. Initializing new survey.');
+    initializeProducts();
+    productRender();
   }
 }
 
@@ -192,4 +197,3 @@ productSelectorTitle.textContent = `Vote for your favorite of the ${productGalle
 document.getElementById('productselector').addEventListener('submit', addVote);
 
 dataRetrieval();
-productRender();
